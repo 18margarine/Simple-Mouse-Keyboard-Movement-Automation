@@ -29,12 +29,23 @@ def clicked_coord(x,y,button, pressed):
     else:
         print(f"Released at {(x,y)} with {button}")
 
+def on_scroll(x, y, dx, dy):
+    print(f'Scrolled at ({x}, {y})({dx}, {dy})')
+    action_order.append(('scroll', '', dy))
+    if dy < 0:
+        print('Scrolling down')
+    elif dy > 0:
+        print('Scrolling up')
+
 # Will print what key is pressed and released (press only one key just to mark it)
 # All full text will be added in replay_movement.py
 def press_key(key):
     try:
         print(f"Button pressed: {key}")
-        action_order.append(('key','',''))
+        if key == pynput.keyboard.Key.enter:
+            action_order.append(('enter', '', ''))
+        else:
+            action_order.append(('key','',''))
     except AttributeError:
         print(f"Special key pressed: {key}")
 # Will end mouse and keyboard recording
@@ -44,7 +55,7 @@ def release_key(key):
         mouse_listen.stop()
         keyboard_listen.stop()
 
-mouse_listen = pynput.mouse.Listener (on_move=current_coord, on_click=clicked_coord)
+mouse_listen = pynput.mouse.Listener (on_move=current_coord, on_click=clicked_coord, on_scroll=on_scroll)
 keyboard_listen = pynput.keyboard.Listener(on_press=press_key, on_release=release_key)
 mouse_listen.start()
 keyboard_listen.start()

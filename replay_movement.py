@@ -1,6 +1,7 @@
 import pyautogui
 import pandas as pd
 from prompt import FileBrowse
+from time import sleep
 '''
 This is a simple automated form or data entry script or any repetitive menial tasks.
 '''
@@ -10,9 +11,15 @@ file_browse.mainloop()
 file_path = file_browse.filename
 
 # This is just a sample text that will replace the keystroke from record_movement.py
-text_sample = [('first item', 'second item')]
+with open ('info to fill.txt') as f:
+    listed_info = tuple(item.strip() for item in f)
+
+text_sample = [listed_info]
 df = pd.read_csv(file_path, header=None)
 pyautogui.MINIMUM_DURATION = 0.01
+
+# Calibrate the value for fine-tuning of scroll
+SCROLL_PER_TICK = 120
 # Iterate on each item in list
 for item in text_sample:
     text_iter = 0
@@ -22,6 +29,12 @@ for item in text_sample:
             pyautogui.moveTo(x=int(rows[1]),y=int(rows[2]))
         elif rows[0] == 'click':
             pyautogui.click(x=int(rows[1]),y=int(rows[2]))
+            sleep(3)
         elif rows[0] == 'key':
             pyautogui.write(item[text_iter])
+            sleep(1)
             text_iter +=1
+        elif rows[0] == 'scroll':
+            pyautogui.scroll(int(rows[2])* SCROLL_PER_TICK)
+        elif rows[0] == 'enter':
+            pyautogui.press('enter')
