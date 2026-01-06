@@ -35,13 +35,13 @@ class App(Tk):
         self.stored_file_name = self.file_name.get()
         self.destroy()
 
-class FileBrowse(Tk):
+class CSVBrowse(Tk):
     def __init__(self):
         super().__init__()
         # Prompt window will be displayed at the center of screen
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
-        window_width = 200
+        window_width = 250
         window_height = 130
         x = (screen_width / 2) - (window_width / 2)
         y = (screen_height / 2) - (window_height / 2)
@@ -49,19 +49,48 @@ class FileBrowse(Tk):
         self.geometry(f"{window_width}x{window_height}+{int(x)}+{int(y)}")
         self.content = ttk.Frame(self, padding=(12, 20, 12, 20))
         self.file_path = ttk.Label(self.content, text="Select generated csv", wraplength=250)
-        self.browse_button = ttk.Button(self.content, text="Browse Files", command=self.browse_files)
+        self.browse_button = ttk.Button(self.content, text="Browse Files", command=self.browse_csv)
         self.content.pack()
         self.file_path.pack(pady=5)
         self.browse_button.pack()
         self.filename = None
 
 
-    def browse_files(self):
+    def browse_csv(self):
         self.filename = filedialog.askopenfilename(
             initialdir=base_path,
             title="Select a file",
-            filetypes=(("CSV file", "*.csv"), ("All files", "*.*"))
+            filetypes=(("CSV file", "*.csv"),("Text file", "*.txt"),("All files", "*.*"))
         )
         if self.filename:
             self.destroy()
 
+class TextBrowse(Tk):
+    def __init__(self):
+        super().__init__()
+        # Prompt window will be displayed at the center of screen
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        window_width = 250
+        window_height = 130
+        x = (screen_width / 2) - (window_width / 2)
+        y = (screen_height / 2) - (window_height / 2)
+        self.title("File Browser")
+        self.geometry(f"{window_width}x{window_height}+{int(x)}+{int(y)}")
+        self.content = ttk.Frame(self, padding=(12, 20, 12, 20))
+        self.file_path = ttk.Label(self.content, text="Select text file for description info", wraplength=250)
+        self.browse_button = ttk.Button(self.content, text="Browse Files", command=self.browse_text)
+        self.content.pack()
+        self.file_path.pack(pady=5)
+        self.browse_button.pack()
+        self.filename = None
+
+
+    def browse_text(self):
+        self.filename = filedialog.askopenfilename(
+            initialdir=base_path,
+            title="Select a file",
+            filetypes=(("Text file", "*.txt"),("All files", "*.*"))
+        )
+        if self.filename:
+            self.destroy()

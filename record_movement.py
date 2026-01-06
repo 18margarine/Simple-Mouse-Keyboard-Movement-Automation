@@ -9,29 +9,30 @@ made during the run of the script. CSV file can then be used in replay_movement.
 SAMPLING_INTERVAL = .0085
 last_event_time = time.time()
 # Store mouse coordinates and key inputs in a list tuple format
-action_order = [('action', 'x', 'y')]
+action_order = [('action', 'x', 'y', 'delay')]
 
 def current_coord (x,y):
     global last_event_time
     current_time = time.time()
     # Limit the sampling interval of mouse movement for faster mouse movement
+    delta = current_time - last_event_time
     if current_time - last_event_time > SAMPLING_INTERVAL:
     # Will print the current coordinates of the mouse based on its location in the screen
         print(f"Currently at: {(x,y)}")
-        action_order.append(('move', x, y))
+        action_order.append(('move', x, y, delta))
     last_event_time = current_time
 
 # Will print current coordinates of mouse when clicked
 def clicked_coord(x,y,button, pressed):
     if pressed:
         print(f"Pressed at {(x, y)} with {button}")
-        action_order.append(('click', x, y))
+        action_order.append(('click', x, y, ''))
     else:
         print(f"Released at {(x,y)} with {button}")
 
 def on_scroll(x, y, dx, dy):
     print(f'Scrolled at ({x}, {y})({dx}, {dy})')
-    action_order.append(('scroll', '', dy))
+    action_order.append(('scroll', '', dy, ''))
     if dy < 0:
         print('Scrolling down')
     elif dy > 0:
@@ -43,9 +44,9 @@ def press_key(key):
     try:
         print(f"Button pressed: {key}")
         if key == pynput.keyboard.Key.enter:
-            action_order.append(('enter', '', ''))
+            action_order.append(('enter', '', '', ''))
         else:
-            action_order.append(('key','',''))
+            action_order.append(('key','','', ''))
     except AttributeError:
         print(f"Special key pressed: {key}")
 # Will end mouse and keyboard recording
